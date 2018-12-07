@@ -4,6 +4,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 from torch.autograd import Variable
+import time 
 
 
 class ConvInputModel(nn.Module):
@@ -123,6 +124,8 @@ class RN(BasicModel):
 
 
     def forward(self, img, qst):
+        begin = time.time()
+        
         x = self.conv(img) ## x = (64 x 24 x 5 x 5)
         
         """g"""
@@ -168,6 +171,9 @@ class RN(BasicModel):
         """f"""
         x_f = self.f_fc1(x_g)
         x_f = F.relu(x_f)
+        
+        elt = time.time() - begin 
+        print('ELT forward RN2 : {} seconds.'.format(elt), end="\r")
         
         return self.fcout(x_f)
 
